@@ -35,9 +35,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData.MapPatch;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_20_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R2.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_20_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_20_R3.block.CraftBlock;
+import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapPalette;
 
@@ -98,7 +98,7 @@ public class MapHelper {
 
         byte[] colors = new byte[pixelCount];
         for (int i = 0; i < pixelCount; i++) {
-            //noinspection deprecation
+            //noinspection removal
             colors[i] = MapPalette.matchColor(new Color(pixels[i], true));
         }
 
