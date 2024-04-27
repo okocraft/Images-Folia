@@ -24,6 +24,7 @@
 package com.andavin.images.nms;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundMapItemDataPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
@@ -32,12 +33,13 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.saveddata.maps.MapId;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData.MapPatch;
 import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
-import org.bukkit.craftbukkit.v1_20_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_20_R3.block.CraftBlock;
-import org.bukkit.craftbukkit.v1_20_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.CraftWorld;
+import org.bukkit.craftbukkit.block.CraftBlock;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.map.MapPalette;
 
@@ -63,11 +65,12 @@ public class MapHelper {
         return MAP_IDS.computeIfAbsent(world.getUID(), __ -> new AtomicInteger(DEFAULT_STARTING_ID)).getAndIncrement();
     }
 
-    public void createMap(int frameId, int mapId, Player player, Location location,
+    public void createMap(int frameId, int rawMapId, Player player, Location location,
                           BlockFace direction, int rotation, byte[] pixels) {
 
         ItemStack item = new ItemStack(Items.FILLED_MAP);
-        item.getOrCreateTag().putInt("map", mapId);
+        MapId mapId = new MapId(rawMapId);
+        item.set(DataComponents.MAP_ID, mapId);
 
         ItemFrame frame = new ItemFrame(((CraftWorld) player.getWorld()).getHandle(),
                 BlockPos.containing(location.getX(), location.getY(), location.getZ()),
@@ -80,10 +83,15 @@ public class MapHelper {
         }
 
         ServerGamePacketListenerImpl connection = ((CraftPlayer) player).getHandle().connection;
+
         connection.send(new ClientboundAddEntityPacket(frame, frame.getDirection().get3DDataValue(), frame.getPos()));
-        connection.send(new ClientboundSetEntityDataPacket(frame.getId(), frame.getEntityData().packDirty()));
-        connection.send(new ClientboundMapItemDataPacket(mapId, (byte) 3, false,
-                emptyList(), new MapPatch(0, 0, 128, 128, pixels)));
+
+        var packed = frame.getEntityData().packDirty();
+        if (packed != null) {
+            connection.send(new ClientboundSetEntityDataPacket(frame.getId(), packed));
+        }
+
+        connection.send(new ClientboundMapItemDataPacket(mapId, (byte) 3, false, emptyList(), new MapPatch(0, 0, 128, 128, pixels)));
     }
 
     public void destroyMap(Player player, int[] frameIds) {
