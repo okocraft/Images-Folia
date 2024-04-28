@@ -10,7 +10,6 @@ val mcVersion = "1.20.5"
 val fullVersion = "${version}-mc${mcVersion}"
 
 repositories {
-    mavenLocal()
     mavenCentral()
 }
 
