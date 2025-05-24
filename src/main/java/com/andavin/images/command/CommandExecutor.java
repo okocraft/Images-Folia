@@ -25,7 +25,7 @@ package com.andavin.images.command;
 
 import com.andavin.images.util.Logger;
 import com.andavin.images.util.StringUtil;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -157,13 +157,13 @@ final class CommandExecutor extends org.bukkit.command.Command {
         for (int i = 0; i < args.length; ++i) {
 
             if (args[i].equalsIgnoreCase(child.getName())) {
-                return (String[]) ArrayUtils.subarray(args, i + 1, args.length);
+                return ArrayUtils.subarray(args, i + 1, args.length);
             }
 
             for (String alias : child.getAliases()) {
 
                 if (args[i].equalsIgnoreCase(alias)) {
-                    return (String[]) ArrayUtils.subarray(args, i + 1, args.length);
+                    return ArrayUtils.subarray(args, i + 1, args.length);
                 }
             }
         }

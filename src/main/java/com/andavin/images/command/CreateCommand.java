@@ -29,7 +29,7 @@ import com.andavin.images.util.ActionBarUtil;
 import com.andavin.images.util.LocationUtil;
 import com.andavin.images.util.Logger;
 import com.andavin.images.util.Scheduler;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
