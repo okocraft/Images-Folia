@@ -1,12 +1,12 @@
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.14"
+    id("io.papermc.paperweight.userdev") version "2.0.0-beta.17"
 }
 
 group = "net.okocraft.images"
 version = "1.0"
 
-val mcVersion = "1.21.4"
+val mcVersion = "1.21.5"
 val fullVersion = "${version}-mc${mcVersion}"
 
 repositories {
