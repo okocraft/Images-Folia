@@ -263,7 +263,7 @@ public class CustomImage implements Serializable {
         image = resize(image, xSections, ySections);
         for (int x = 0; x < xSections; x++) {
 
-            for (int z = 0; z < ySections; z++) {
+            for (int y = 0; y < ySections; y++) {
 
                 Location loc = location.clone();
                 switch (direction) {
@@ -271,16 +271,16 @@ public class CustomImage implements Serializable {
 
                         switch (face) {
                             case NORTH:
-                                loc.add(-x, 0, -z);
+                                loc.add(-x, 0, -y);
                                 break;
                             case SOUTH:
-                                loc.add(x, 0, z);
+                                loc.add(x, 0, y);
                                 break;
                             case EAST:
-                                loc.add(z, 0, -x);
+                                loc.add(y, 0, -x);
                                 break;
                             case WEST:
-                                loc.add(-z, 0, x);
+                                loc.add(-y, 0, x);
                                 break;
                         }
 
@@ -289,36 +289,36 @@ public class CustomImage implements Serializable {
 
                         switch (face) {
                             case NORTH:
-                                loc.add(-x, 0, z);
+                                loc.add(-x, 0, y);
                                 break;
                             case SOUTH:
-                                loc.add(x, 0, -z);
+                                loc.add(x, 0, -y);
                                 break;
                             case EAST:
-                                loc.add(-z, 0, -x);
+                                loc.add(-y, 0, -x);
                                 break;
                             case WEST:
-                                loc.add(z, 0, x);
+                                loc.add(y, 0, x);
                                 break;
                         }
 
                         break;
                     case NORTH:
-                        loc.add(-x, -z, 0);
+                        loc.add(-x, -y, 0);
                         break;
                     case SOUTH:
-                        loc.add(x, -z, 0);
+                        loc.add(x, -y, 0);
                         break;
                     case EAST:
-                        loc.add(0, -z, -x);
+                        loc.add(0, -y, -x);
                         break;
                     case WEST:
-                        loc.add(0, -z, x);
+                        loc.add(0, -y, x);
                         break;
                 }
 
                 CustomImageSection section = new CustomImageSection(loc, direction,
-                        rotation, image.getSubimage(x * PIXELS_PER_FRAME, z * PIXELS_PER_FRAME,
+                        rotation, image.getSubimage(x * PIXELS_PER_FRAME, y * PIXELS_PER_FRAME,
                         PIXELS_PER_FRAME, PIXELS_PER_FRAME));
                 this.sections.put(section.getFrameId(), section);
             }
