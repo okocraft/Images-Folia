@@ -47,12 +47,13 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -65,7 +66,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 final class CreateCommand extends BaseCommand implements Listener {
 
-    private static final Predicate<String> URL_TEST = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]").asPredicate();
+    private static final Pattern URL_TEST = Pattern.compile("^(https?|ftps?)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
     private final Map<UUID, CreateImageTask> creating = new HashMap<>();
 
     CreateCommand() {
@@ -88,13 +89,16 @@ final class CreateCommand extends BaseCommand implements Listener {
 
         ImageSupplier imageSupplier;
         String imageLocationArg = args[1];
-        if (URL_TEST.test(imageLocationArg)) {
+        if (player.hasPermission("images.command.create.url") && URL_TEST.matcher(imageLocationArg).matches()) {
             imageSupplier = () -> {
-                URI uri = new URI(imageLocationArg);
-                return ImageIO.read(uri.toURL());
+                URL url = new URI(imageLocationArg).toURL();
+                InetAddress addr = InetAddress.getByName(url.getHost());
+                checkArgument(!addr.isAnyLocalAddress() && !addr.isLoopbackAddress() && !addr.isSiteLocalAddress(),
+                        "invalid local URL: %s", imageLocationArg);
+                return ImageIO.read(url);
             };
         } else {
-            File imageFile = Images.getImageFile(imageLocationArg);
+            File imageFile = Images.findImageFile(imageLocationArg);
             imageSupplier = () -> ImageIO.read(imageFile);
         }
 

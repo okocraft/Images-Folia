@@ -32,6 +32,7 @@ import com.andavin.images.image.CustomImage;
 import com.andavin.images.util.LocationUtil;
 import com.andavin.images.util.Logger;
 import com.andavin.images.util.Scheduler;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -55,9 +56,9 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
@@ -300,19 +301,49 @@ public class Images extends JavaPlugin implements Listener {
      * @return The file with the matching name.
      * @throws IllegalArgumentException If there is no file with
      *                                  the given name to match.
-     * @throws IllegalStateException    If there are no images in the
-     *                                  image directory.
+     * @throws IllegalStateException If there are no images in the
+     *                               image directory.
      */
-    public static File getImageFile(String fileName) throws IllegalArgumentException, IllegalStateException {
+    public static File findImageFile(String fileName) throws IllegalArgumentException, IllegalStateException {
+        checkArgument(fileName.charAt(0) != '.' && !fileName.contains("..") &&
+                        !StringUtils.contains(fileName, File.pathSeparatorChar),
+                "§cInvalid image name: %s", fileName);
+        File match = findImageFile(imagesDirectory, fileName);
+        checkArgument(match != null, "§cImage not found§f %s", fileName);
+        return match;
+    }
 
-        File imageFile = new File(imagesDirectory, fileName);
-        if (imageFile.exists()) {
-            return imageFile;
+    private static File findImageFile(File dir, String fileName) {
+
+        File[] imageFiles = dir.listFiles();
+        if (imageFiles == null) {
+            return null;
+        }
+
+        File exactMatch = Stream.of(imageFiles)
+                .filter(File::isFile)
+                .filter(file -> file.getName().equals(fileName))
+                .findFirst()
+                .orElse(null);
+        if (exactMatch != null) {
+            return exactMatch;
+        }
+
+        if (StringUtils.contains(fileName, File.separatorChar)) {
+
+            for (File file : imageFiles) {
+
+                String name = file.getName();
+                if (fileName.startsWith(name) && file.isDirectory()) {
+                    String trimmedFileName = fileName.substring(name.length() + 2); // Remove separator too
+                    checkArgument(trimmedFileName.charAt(0) != '.',
+                            "§cInvalid image name: %s", fileName);
+                    return findImageFile(file, trimmedFileName);
+                }
+            }
         }
 
         File match = null;
-        File[] imageFiles = imagesDirectory.listFiles();
-        checkState(imageFiles != null, "§cNo available images");
         for (File file : imageFiles) {
 
             String name = file.getName();
@@ -328,7 +359,6 @@ public class Images extends JavaPlugin implements Listener {
             }
         }
 
-        checkArgument(match != null, "§cImage Not Found§f %s", fileName);
         return match;
     }
 
