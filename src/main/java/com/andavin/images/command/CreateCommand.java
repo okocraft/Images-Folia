@@ -25,10 +25,11 @@ package com.andavin.images.command;
 
 import com.andavin.images.Images;
 import com.andavin.images.image.CustomImage;
-import com.andavin.images.util.ActionBarUtil;
 import com.andavin.images.util.LocationUtil;
 import com.andavin.images.util.Logger;
 import com.andavin.images.util.Scheduler;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -118,7 +119,7 @@ final class CreateCommand extends BaseCommand implements Listener {
         this.creating.put(id, new CreateImageTask(scale, imageSupplier, () -> UUID.randomUUID().toString()));
 
         Scheduler.repeatAsyncWhile(
-                () -> ActionBarUtil.sendActionBar(player, "§eRight Click to place§7 - §eLeft Click to cancel"),
+                () -> player.sendActionBar(Component.text().append(Component.text("Right Click to place", NamedTextColor.YELLOW)).append(Component.text(" - ", NamedTextColor.GRAY)).append(Component.text("Left Click to cancel", NamedTextColor.YELLOW))),
                 5L, 20L, () -> this.creating.containsKey(id)
         );
     }
