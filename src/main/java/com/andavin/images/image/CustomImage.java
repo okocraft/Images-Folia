@@ -31,10 +31,20 @@ import org.bukkit.World;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serial;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkState;
 import static java.util.Collections.emptySet;
@@ -94,7 +104,7 @@ public class CustomImage implements Serializable {
      * this image.
      *
      * @return The image creator or {@link #UNKNOWN_CREATOR} if
-     *         there is no creator.
+     * there is no creator.
      */
     public UUID getCreator() {
         return creator;
@@ -124,7 +134,7 @@ public class CustomImage implements Serializable {
      *
      * @param frameId The frame ID to get the section for.
      * @return The section or {@code null} if the
-     *         section is not found.
+     * section is not found.
      */
     public CustomImageSection getSection(int frameId) {
         return this.sections.get(frameId);
@@ -136,7 +146,7 @@ public class CustomImage implements Serializable {
      *
      * @param mapId The map ID to get the section for.
      * @return The section or {@code null} if the
-     *         section is not found.
+     * section is not found.
      */
     public CustomImageSection getSectionByMap(int mapId) {
 
@@ -154,7 +164,7 @@ public class CustomImage implements Serializable {
      * Show or hide this image for a player if they are within
      * 64 blocks or outside of 128 blocks of any of its sections.
      *
-     * @param player The player to show the image to.
+     * @param player   The player to show the image to.
      * @param location The location of the player to measure the distance from.
      */
     public void refresh(Player player, Location location) {
@@ -334,7 +344,7 @@ public class CustomImage implements Serializable {
      * are within the specified range of a {@link Location}.
      *
      * @param location The location to test within range of.
-     * @param range The range to test with.
+     * @param range    The range to test with.
      * @return If the location is in range of this image.
      */
     public boolean isInRange(Location location, int range) {
@@ -371,9 +381,9 @@ public class CustomImage implements Serializable {
 
         CustomImage image = (CustomImage) obj;
         return this.direction == image.direction &&
-                this.imageName.equals(image.imageName) &&
-                this.creator.equals(image.creator) &&
-                this.location.equals(image.location);
+               this.imageName.equals(image.imageName) &&
+               this.creator.equals(image.creator) &&
+               this.location.equals(image.location);
     }
 
     @Serial

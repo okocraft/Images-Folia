@@ -30,11 +30,14 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @since September 20, 2019

@@ -39,11 +39,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
@@ -223,7 +232,7 @@ public class Images extends JavaPlugin implements Listener {
         }
 
         if (from.getBlockX() >> 4 != to.getBlockX() >> 4 ||
-                from.getBlockZ() >> 4 != to.getBlockZ() >> 4) {
+            from.getBlockZ() >> 4 != to.getBlockZ() >> 4) {
             Scheduler.async(() -> this.refreshImages(player, to));
         }
     }
