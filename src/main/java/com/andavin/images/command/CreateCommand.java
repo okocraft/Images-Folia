@@ -30,7 +30,6 @@ import com.andavin.images.util.Logger;
 import com.andavin.images.util.Scheduler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -131,13 +130,10 @@ final class CreateCommand extends BaseCommand implements Listener {
 
     @Override
     public void tabComplete(CommandSender sender, String[] args, List<String> completions) {
-
         if (args.length == 1) {
-
             Images.getImageFiles().forEach(file -> {
-
                 String name = file.getName();
-                if (StringUtils.startsWithIgnoreCase(name, args[0])) {
+                if (name.toLowerCase().startsWith(args[0].toLowerCase())) {
                     completions.add(name.replace(' ', '_'));
                 }
             });
@@ -225,18 +221,11 @@ final class CreateCommand extends BaseCommand implements Listener {
         }
     }
 
-    private static class CreateImageTask {
+    private record CreateImageTask(double scale, ImageSupplier imageSupplier, Supplier<String> nameSupplier) {
 
-        private final double scale;
-        private final ImageSupplier imageSupplier;
-        private final Supplier<String> nameSupplier;
-
-        CreateImageTask(double scale, ImageSupplier supplier, Supplier<String> nameSupplier) {
-            checkArgument(scale > 0,
-                    "§cScale must be greater than zero§f %s", scale);
-            this.scale = scale;
-            this.nameSupplier = nameSupplier;
-            this.imageSupplier = checkNotNull(supplier);
+        private CreateImageTask {
+            checkArgument(scale > 0, "§cScale must be greater than zero§f %s", scale);
+            checkNotNull(imageSupplier);
         }
 
         /**

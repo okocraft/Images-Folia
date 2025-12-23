@@ -248,25 +248,21 @@ public class CustomImage implements Serializable {
         int rotation;
         BlockFace face;
         Set<Player> players = this.destroy();
-        switch (direction) {
-            case UP:
+        rotation = switch (direction) {
+            case UP -> {
                 face = LocationUtil.getCardinalDirection(location).getOppositeFace();
-                rotation = (int) (LocationUtil.getDifference(BlockFace.SOUTH, face) / 90);
-                break;
-            case DOWN:
+                yield (int) (LocationUtil.getDifference(BlockFace.SOUTH, face) / 90);
+            }
+            case DOWN -> {
                 face = LocationUtil.getCardinalDirection(location).getOppositeFace();
-                rotation = (int) (LocationUtil.getDifference(face, BlockFace.SOUTH) / 90);
-                break;
-            case NORTH:
-            case SOUTH:
-            case EAST:
-            case WEST:
+                yield (int) (LocationUtil.getDifference(face, BlockFace.SOUTH) / 90);
+            }
+            case NORTH, SOUTH, EAST, WEST -> {
                 face = BlockFace.SELF;
-                rotation = 0;
-                break;
-            default:
-                throw new IllegalStateException("Invalid direction " + direction);
-        }
+                yield 0;
+            }
+            default -> throw new IllegalStateException("Invalid direction " + direction);
+        };
 
         int xSections = Math.max(image.getWidth() / PIXELS_PER_FRAME, 1);
         int ySections = Math.max(image.getHeight() / PIXELS_PER_FRAME, 1);
@@ -375,11 +371,10 @@ public class CustomImage implements Serializable {
             return true;
         }
 
-        if (!(obj instanceof CustomImage)) {
+        if (!(obj instanceof CustomImage image)) {
             return false;
         }
 
-        CustomImage image = (CustomImage) obj;
         return this.direction == image.direction &&
                this.imageName.equals(image.imageName) &&
                this.creator.equals(image.creator) &&

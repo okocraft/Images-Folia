@@ -244,11 +244,10 @@ public abstract class BaseCommand {
             return true;
         }
 
-        if (!(o instanceof BaseCommand)) {
+        if (!(o instanceof BaseCommand cmd)) {
             return false;
         }
 
-        BaseCommand cmd = ((BaseCommand) o);
         if (cmd.getName().equalsIgnoreCase(this.name)) {
             return true;
         }
