@@ -117,7 +117,7 @@ public class Images extends JavaPlugin implements Listener {
         MapHelper.invisible = config.getBoolean("invisible-frames", true);
         MapHelper.showDistance = config.getInt("show-distance", 64);
         MapHelper.hideDistance = config.getInt("hide-distance", 128);
-        String type = config.getString("database.type").toUpperCase(Locale.ENGLISH);
+        String type = config.getString("database.type", "FILE").toUpperCase(Locale.ENGLISH);
         switch (type) {
             case "MYSQL":
                 dataManager = new MySQLDataManager(
