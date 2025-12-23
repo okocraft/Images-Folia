@@ -98,15 +98,14 @@ public class MapHelper {
         ((CraftPlayer) player).getHandle().connection.send(new ClientboundRemoveEntitiesPacket(frameIds));
     }
 
+    @SuppressWarnings("removal")
     public byte[] createPixels(BufferedImage image) {
-
         int pixelCount = image.getWidth() * image.getHeight();
         int[] pixels = new int[pixelCount];
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 
         byte[] colors = new byte[pixelCount];
         for (int i = 0; i < pixelCount; i++) {
-            //noinspection removal
             colors[i] = MapPalette.matchColor(new Color(pixels[i], true));
         }
 
