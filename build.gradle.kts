@@ -1,12 +1,12 @@
 plugins {
     `java-library`
-    id("io.papermc.paperweight.userdev") version "2.0.0-beta.21"
+    alias(libs.plugins.paperweight.userdev)
 }
 
 group = "net.okocraft.images"
 version = "1.0"
 
-val mcVersion = "1.21.11"
+val mcVersion = libs.versions.paper.get().replaceAfter(".build", "").removeSuffix(".build")
 val fullVersion = "${version}-mc${mcVersion}"
 
 repositories {
@@ -14,15 +14,13 @@ repositories {
 }
 
 dependencies {
-    paperweight.paperDevBundle("$mcVersion-R0.1-SNAPSHOT")
+    paperweight.paperDevBundle(libs.versions.paper.get())
 }
 
 java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
 }
-
-paperweight.reobfArtifactConfiguration = io.papermc.paperweight.userdev.ReobfArtifactConfiguration.MOJANG_PRODUCTION
 
 tasks {
     compileJava {
