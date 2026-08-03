@@ -79,7 +79,7 @@ public class MapHelper {
         frame.setInvisible(com.andavin.images.MapHelper.invisible);
         frame.setId(frameId);
         if (rotation != 0) {
-            frame.getEntityData().set(ItemFrame.DATA_ROTATION, rotation);
+            frame.setRotation(rotation);
         }
 
         ServerGamePacketListenerImpl connection = ((CraftPlayer) player).getHandle().connection;

@@ -58,7 +58,7 @@ public class CustomImageSection implements Serializable {
 
     CustomImageSection(Location location, BlockFace direction, int rotation, BufferedImage image) {
         this.rotation = rotation;
-        this.frameId = Bukkit.getUnsafe().nextEntityId();
+        this.frameId = Bukkit.getUnsafe().nextEntityId(location.getWorld());
         this.mapId = MapHelper.getNextMapId(location.getWorld());
         this.location = location;
         this.direction = direction;
@@ -157,7 +157,7 @@ public class CustomImageSection implements Serializable {
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         this.location = CustomImage.readLocation(in);
-        this.frameId = Bukkit.getUnsafe().nextEntityId();
+        this.frameId = Bukkit.getUnsafe().nextEntityId(location.getWorld());
         this.mapId = MapHelper.getNextMapId(location.getWorld());
         this.shown = new HashSet<>();
     }
